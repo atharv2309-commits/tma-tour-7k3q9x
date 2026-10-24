@@ -519,12 +519,10 @@ function sv(tag, props, kids) {
   [].concat(kids == null ? [] : kids).forEach((c) => { if (c != null) n.append(c); });
   return n;
 }
-/* language: Dutch by default. English with the EN button, ?lang=en, or the choice kept from last time. */
-const LANG_KEY = 'tma-lang-v1';
+/* language: the page opens in English every time. ?lang=nl opens it in Dutch, and the NL button switches it while it is open. */
 let LANG = (function () {
   try { const q = new URLSearchParams(location.search).get('lang'); if (q === 'en' || q === 'nl') return q; } catch (e) { /* no query string */ }
-  try { const s = localStorage.getItem(LANG_KEY); if (s === 'en' || s === 'nl') return s; } catch (e) { /* storage can be blocked */ }
-  return 'nl';
+  return 'en';
 })();
 let NL = LANG === 'nl';
 const tr = (en, nl) => (NL ? nl : en);
@@ -1422,7 +1420,6 @@ function setLang(l) {
     keep[k] = x == null ? i.value : String(x).replace('.', l === 'nl' ? ',' : '.');
   });
   LANG = l; NL = l === 'nl';
-  try { localStorage.setItem(LANG_KEY, l); } catch (e) { /* storage can be blocked; the page still works */ }
   setFormats();
   FL.forEach((f) => { f.wd = parts(f.s).weekday; });
   if (Object.keys(keep).length) bizSave(keep);
